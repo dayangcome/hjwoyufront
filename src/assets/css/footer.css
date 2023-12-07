@@ -1,0 +1,14 @@
+.footer {
+    background-color: #2a2a2a;
+    height: 140px;
+    line-height: 140px;
+}
+
+.footer p {
+    text-align: center;
+    color: #cccccc;
+}
+
+.footer p a:hover {
+    color: #ccc;
+}
