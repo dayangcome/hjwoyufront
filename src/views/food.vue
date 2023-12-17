@@ -4,7 +4,7 @@
             <div class="game-list">
                 <!-- 食物列表和介绍 -->
                 <h2>热门美食</h2>
-                <div style="display: flex;flex-wrap: wrap;">
+                <div style="display: grid;grid-template-columns: 1fr 1fr 1fr;">
                     <div v-for="item in gameitems" class="game-item" @click="playgame(item)" style="display: flex;flex-direction: column;width: 70px;margin:8px 20px;">  	
                         <img :src="item.imgsrc" class="image" style="width: 70px;height: 70px;border-radius: 6px;margin-bottom: 5px;">
                         <div style="text-align: center;">
@@ -129,7 +129,7 @@
                     </div>
                 
             </div>
-            <el-link class="new active"  @click="positive" style="margin: 0 5px 0 40px;">最新</el-link>
+            <el-link class="new active"  @click="positive" style="margin: 0 5px 0 45px;">最新</el-link>
             <el-divider direction="vertical"></el-divider>
             <el-link class="hot" @click="negitive" style="margin: 0 5px;">最热</el-link>
                 <el-divider></el-divider>
@@ -140,7 +140,7 @@
                             <img :src="item.authorPic" alt="Author Avatar" class="avatar">
                             <div class="author-info">
                                 <span class="author-name">{{ item.authorName }} </span>
-                                <span class="post-time"> 发表于 {{item.createDate.replace(/T/g, ' ')}}</span>
+                                <span class="post-time"> 发表于 {{getDateDiff(item.createDate)}}</span>
                             </div>
 
 
@@ -210,7 +210,7 @@
                             <button v-else style="background-color: #007bff3a;width: 130px;" class="dislike-btn">👎 已点踩 <span class="dislike-count">{{item.dislikeCounts}}</span></button>
                             
                             <button v-if="commentvisable != item.id"  style="width: 130px;" @click="comment(item.id)" class="comment-btn">💬 评论 <span class="comment-count">{{item.commentCounts}}</span></button>
-                            <button v-else style="width: 130px;border-radius: 0%;background-color: white;" @click="comment2" class="comment-btn">💬 评论 <span class="comment-count">{{item.commentCounts}}</span></button>
+                            <button v-else style="width: 130px;border-radius: 0%;background-color: #f5f5f5bd;" @click="comment2" class="comment-btn">💬 评论 <span class="comment-count">{{item.commentCounts}}</span></button>
                         </div>
 
 
@@ -241,7 +241,7 @@
                                     
                                     <el-link style="float: right;margin-right: 30px;margin-top:10px;font-size: 15px;" @click="reply(item)" >回复</el-link>
                                 </div>
-                                <div class="timestamp">发表于 {{item.createDate.replace(/T/g, ' ')}}</div>
+                                <div class="timestamp">发表于 {{getDateDiff(item.createDate)}}</div>
                                 <div class="message">{{item.content}}</div>
                                 </div>
                             </div>
@@ -277,7 +277,7 @@
                 "😭","😪","😥","😅","🥰","😐","😤","😍","😇","😀","🤣","😃","😂",
                 "😮","🤤","🤐","🙄","😯","🙂","😔","😎","🤔","😄","😉","🥵","👿",
                 "🤗","😆","😘","😊","😒","✌","❓","💧","👀","🙏","⭐","👌","✋",
-                "❤","💕","👍"
+                "❤","💕","👍","🐉","🧔","👧🏽"
             ],
             dialogTableVisible:false,
             value2: null,
@@ -687,6 +687,37 @@
         showDialog() {
             this.addgamesVisible = true;
         },
+        getDateDiff(dateTimeStamp) {
+			if(dateTimeStamp){
+				// 时间字符串转时间戳
+			    var timestamp = new Date(dateTimeStamp).getTime();
+			    var minute = 1000 * 60;
+			    var hour = minute * 60;
+			    var day = hour * 24;
+			    var now = new Date().getTime();
+			    var diffValue = now - timestamp;
+			    var result;
+			    if (diffValue < 0) {
+			        return;
+			    }
+			    var dayC = diffValue / day;
+			    var hourC = diffValue / hour;
+			    var minC = diffValue / minute;
+				if (dayC >= 2) {
+				    result = dateTimeStamp.split(" ")[0];
+				}else if (dayC < 2 && dayC > 1) {
+			        result = "昨天";
+			    } else if (hourC >= 1) {
+			        result = "" + parseInt(hourC) + "小时前";
+			    } else if (minC >= 1) {
+			        result = "" + parseInt(minC) + "分钟前";
+			    } else
+			        result = "刚刚";
+			    return result.replace(/T/g, ' ');
+			}else{
+				return ''
+			}  
+		},
         submitForm() {
             // 提交表单逻辑，这里可以发送请求或执行其他操作
             if(this.gameForm.name.length<1){
@@ -791,34 +822,36 @@
   
   <style scoped>
 
-    #outbox{
-        height: 645px;
-        background-color: #f5f5f5;
-        padding: 5px;
-        display: flex;
-        /* height: 100vh; */
-    }
-    .mycontainer {
+#outbox{
+    height: calc(100vh - 64px);
+    padding: 5px;
+    display: flex;
+    background-color: #ffd2d2de;
+    background-image: url('https://pic.imgdb.cn/item/657d6a9ac458853aefac7c17.jpg');
+    background-size:contain;
+}
+.mycontainer {
     display: flex;
     flex-direction: column;
-    margin: 5px;
-    background-color: #fff;
+    margin: 0 5px 5px 5px;
+    background-color: #f5f5f5bd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
     width: 25%;
+    height: 100%;
 }
 
 .game-list, .player-activities {
     flex: 1;
     padding: 20px;
-    height:630px;
+    height: 100%;
     overflow: auto;
 }
 
-.game-list {
-    background-color: #fff;
-}
+.player-activities::-webkit-scrollbar {
+       width: 0;
+ }
 
 h2 {
     color: #333;
@@ -834,8 +867,9 @@ li h3 {
 }
 
 .player-activities {
-    background-color: #f5f5f5;
+    background-color: #f5f5f5bd;
     overflow-x:hidden;
+    border-radius: 8px;
 }
 
 #post-form {
@@ -877,7 +911,7 @@ button {
 }
 
 /* 添加其他样式和动画效果 */
-/* 美食列表项的样式 */
+/* 游戏列表项的样式 */
 li {
     position: relative;
 }
@@ -908,12 +942,17 @@ h3 {
 .post-box {
     max-width: 700px;
     margin: 0 auto;
-    border: 2px solid #ddd;
+    border: 2px solid #f5f5f5;
     border-radius: 10px;
     padding: 14px;
     box-sizing: border-box;
-    background-color: #fff;
+    background-color: #f5f5f5;
     transition: border-color 0.3s ease;
+}
+
+.el-popconfirm__action{
+        text-align: center;
+        margin-top: 10px ;
 }
 
 .post-box:focus-within {
@@ -927,6 +966,7 @@ h3 {
     resize: none;
     margin-bottom: 15px;
     border-radius: 8px;
+    background-color: #f5f5f500;
     padding: 12px;
     font-size: 16px;
     box-sizing: border-box;
@@ -960,10 +1000,14 @@ h3 {
     width: 100%;
     max-width: 1000px;
     margin: 20px auto;
-    border: 1px solid #ddd;
+    border: 1px solid #eaeaea;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+}
+
+.card:hover{
+    box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.3);
 }
 
 .header {
@@ -1136,8 +1180,12 @@ h3 {
     }
    
     .el-divider--horizontal{
-        margin: 7px 34px;
+        margin: 7px 45px;
         width: 1000px;
+    }
+    
+    .el-divider{
+        background-color: #60626652;
     }
 
     .active{
@@ -1146,7 +1194,7 @@ h3 {
 
     .comments-container {
       max-width: 1000px;
-      background-color: #fff;
+      background-color: #f5f5f5bd;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       /* border-radius: 8px; */
       overflow: hidden;
@@ -1216,6 +1264,7 @@ h3 {
       border: 1px solid #bdc3c7;
       border-radius: 4px;
       resize: none;
+      background-color: #f5f5f5;
       transition: border-color 0.3s;
     }
 

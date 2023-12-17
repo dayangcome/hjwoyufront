@@ -14,6 +14,8 @@ import AboutUs from '../components/AboutUs.vue'
 import building from '../views/building.vue'
 import tools from '../views/tools.vue'
 import tools1 from '../views/music-tool.vue'
+import Test from '../components/Test.vue'
+import Updatelog from '../components/Updatelog.vue'
 
 Vue.use(VueRouter)
 
@@ -26,6 +28,10 @@ export default new VueRouter({
     {
       path:'/aboutus',
       component:AboutUs
+    },
+    {
+      path:'/updatelog',
+      component:Updatelog
     },
     {
       path:'/inner',
@@ -66,6 +72,7 @@ export default new VueRouter({
         {
           path:'/inner/pan',
           component:building
+          // component:Test
         },
         {
           path:'/inner/tools',

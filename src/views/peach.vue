@@ -4,7 +4,7 @@
             <div class="game-list">
                 <!-- 想法列表和介绍 -->
                 <h2>热门想法</h2>
-                <div style="display: flex;flex-wrap: wrap;">
+                <div style="display: grid;grid-template-columns: 1fr 1fr 1fr;">
                     <div v-for="item in gameitems" class="game-item" @click="playgame(item)" style="display: flex;flex-direction: column;width: 70px;margin:8px 20px;">  	
                         <img :src="item.imgsrc" class="image" style="width: 70px;height: 70px;border-radius: 6px;margin-bottom: 5px;">
                         <div style="text-align: center;">
@@ -124,7 +124,7 @@
                     </div>
                 
             </div>
-            <el-link class="new active"  @click="positive" style="margin: 0 5px 0 40px;">最新</el-link>
+            <el-link class="new active"  @click="positive" style="margin: 0 5px 0 45px;">最新</el-link>
             <el-divider direction="vertical"></el-divider>
             <el-link class="hot" @click="negitive" style="margin: 0 5px;">最热</el-link>
                 <el-divider></el-divider>
@@ -135,7 +135,7 @@
                             <img :src="item.authorPic" alt="Author Avatar" class="avatar">
                             <div class="author-info">
                                 <span class="author-name">{{ item.authorName }} </span>
-                                <span class="post-time"> 发表于 {{item.createDate.replace(/T/g, ' ')}}</span>
+                                <span class="post-time"> 发表于 {{ getDateDiff(item.createDate) }}</span>
                             </div>
 
 
@@ -205,7 +205,7 @@
                             <button v-else style="background-color: #007bff3a;width: 130px;" class="dislike-btn">👎 已点踩 <span class="dislike-count">{{item.dislikeCounts}}</span></button>
                             
                             <button v-if="commentvisable != item.id"  style="width: 130px;" @click="comment(item.id)" class="comment-btn">💬 评论 <span class="comment-count">{{item.commentCounts}}</span></button>
-                            <button v-else style="width: 130px;border-radius: 0%;background-color: white;" @click="comment2" class="comment-btn">💬 评论 <span class="comment-count">{{item.commentCounts}}</span></button>
+                            <button v-else style="width: 130px;border-radius: 0%;background-color: #f5f5f5bd;" @click="comment2" class="comment-btn">💬 评论 <span class="comment-count">{{item.commentCounts}}</span></button>
                         </div>
 
 
@@ -236,7 +236,7 @@
                                     
                                     <el-link style="float: right;margin-right: 30px;margin-top:10px;font-size: 15px;" @click="reply(item)" >回复</el-link>
                                 </div>
-                                <div class="timestamp">发表于 {{item.createDate.replace(/T/g, ' ')}}</div>
+                                <div class="timestamp">发表于 {{ getDateDiff(item.createDate)}}</div>
                                 <div class="message">{{item.content}}</div>
                                 </div>
                             </div>
@@ -610,6 +610,37 @@
         addtopic(){
             this.mytext+="  # 在此输入话题 #  "
         },
+        getDateDiff(dateTimeStamp) {
+			if(dateTimeStamp){
+				// 时间字符串转时间戳
+			    var timestamp = new Date(dateTimeStamp).getTime();
+			    var minute = 1000 * 60;
+			    var hour = minute * 60;
+			    var day = hour * 24;
+			    var now = new Date().getTime();
+			    var diffValue = now - timestamp;
+			    var result;
+			    if (diffValue < 0) {
+			        return;
+			    }
+			    var dayC = diffValue / day;
+			    var hourC = diffValue / hour;
+			    var minC = diffValue / minute;
+				if (dayC >= 2) {
+				    result = dateTimeStamp.split(" ")[0];
+				}else if (dayC < 2 && dayC > 1) {
+			        result = "昨天";
+			    } else if (hourC >= 1) {
+			        result = "" + parseInt(hourC) + "小时前";
+			    } else if (minC >= 1) {
+			        result = "" + parseInt(minC) + "分钟前";
+			    } else
+			        result = "刚刚";
+			    return result.replace(/T/g, ' ');
+			}else{
+				return ''
+			}  
+		},
         topic(v){
             return v.replaceAll(/#([^#]*)#/g, `<span style="color:dodgerblue;cursor: pointer">#$1#</span>`)
         },
@@ -773,452 +804,471 @@
   
   <style scoped>
 
-    #outbox{
-        height: 645px;
-        background-color: #f5f5f5;
-        padding: 5px;
-        display: flex;
-    }
-    .mycontainer {
-    display: flex;
-    flex-direction: column;
-    margin: 5px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    width: 25%;
-}
-
-.game-list, .player-activities {
-    flex: 1;
-    padding: 20px;
-    height:630px;
-    overflow: auto;
-}
-
-.game-list {
-    background-color: #fff;
-}
-
-h2 {
-    color: #333;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-li h3 {
-    color: #007bff;
-}
-
-.player-activities {
-    background-color: #f5f5f5;
-    overflow-x:hidden;
-}
-
-#post-form {
-    margin-bottom: 20px;
-}
-
-#post-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-button {
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-
-.activity-item {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: #fff;
-    border-radius: 4px;
-    transition: transform 0.3s ease-in-out;
-}
-
-.activity-item:hover {
-    transform: scale(1.02);
-}
-
-.activity-item p {
-    margin: 0 0 10px 0;
-}
-
-/* 添加其他样式和动画效果 */
-/* 想法列表项的样式 */
-li {
-    position: relative;
-}
-
-img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-}
-
-h3 {
-    color: #333;
-}
-
-.details-link {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.details-link:hover {
-    text-decoration: underline;
-}
-
-.post-box {
-    max-width: 700px;
-    margin: 0 auto;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    padding: 14px;
-    box-sizing: border-box;
-    background-color: #fff;
-    transition: border-color 0.3s ease;
-}
-
-.post-box:focus-within {
-    border-color: #384338f6;
-}
-
-#post-content {
-    width: 100%;
-    height: 70px;
-    border: none;
-    resize: none;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 16px;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    outline: none; /* 取消 textarea 的默认聚焦样式 */
-}
-
-.post-options {
-    margin-bottom: 38px;
-}
-
-.post-btn {
-    padding: 10px 15px;
-    margin-left: 9px;
-    margin-right: 5px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    background-color: #384338f6;
-    color: white;
-    transition: background-color 0.3s ease;
-}
-
-.post-btn:hover {
-    background-color: #384338e0;
-}
-
-/* 动态卡片样式 */
-.card {
-    width: 100%;
-    max-width: 1000px;
-    margin: 20px auto;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-.header {
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    background-color: #384338;
-    color: white;
-}
-
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.author-info {
-    flex-grow: 1;
-}
-
-.author-name {
-    font-weight: bold;
-    margin-right: 5px;
-}
-
-.post-time {
-    color: #ccc;
-    font-size: 13px;
-}
-
-
-.content {
-    padding: 15px;
-}
-
-
-.like-btn,
-.dislike-btn,
-.comment-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color:#555;
-    font-size: 14px;
-    margin-right: 5px;
-}
-
-.like-count,
-.dislike-count,
-.comment-count {
-    margin-right: 10px;
-    font-size: 14px;
-    color: #555;
-}
-
-.myfooter button:hover{
-    background-color: #007bff3a;
-}
-.emoji-item{
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    box-sizing: border-box;
-    padding: 5px;
-    text-align: center;
-}
-
-.emoji-item:hover{
-    background-color: #384338f6;
-}
-
-.game-item{
-    cursor: pointer;
-}
-
-.game-item:hover{
-    color: red;
-}
-
-.game-item img:hover{
-   
-    border:#ff0000 2px solid;   
-}
-
-.notoverflow{
-    margin:14px;
-    font-size: 15.5px;
-    float: right;
-    color: #929292;
-}
-
-.hasoverflow{
-    margin:14px;
-    font-size: 15.5px;
-    float: right;
-    color: #ff0000;
-}
-
-.delete-btn{
-    margin-right: 20px;
-}
-
-.delete-btn:hover{
-    color: #ff0000;
-}
-
-.gamecard {
-      background-color: #ffffff;
+  #outbox{
+      height: calc(100vh - 64px);
+      padding: 5px;
       display: flex;
-      overflow: hidden;
-    }
+      background-color: rgb(198, 214, 230);
+      background-image: url('https://pic.imgdb.cn/item/657d7715c458853aefdb58fd.jpg');
+      background-size:contain;
+  }
 
-    .gamecard-header {
+  .el-popconfirm__action{
+        text-align: center;
+        margin-top: 10px ;
+    }
+  .mycontainer {
       display: flex;
       flex-direction: column;
-      margin: 0 15px 20px 15px;
-      width: 30%;
-      align-items:center;
-    }
-    .gamecard-body {
-      padding:0 10px 20px 10px;
-    }
-
-
-    .game-info {
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
-
-    .game-info h3 {
-      margin-top: 0;
-    }
-
-    .player-rating {
-      margin-bottom: 20px;
-    }
-
-    .btn-container {
-      text-align: center;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 10px 20px;
-      font-size: 16px;
-      text-align: center;
-      text-decoration: none;
-      border-radius: 5px;
-      margin-right: 10px;
-    }
-
-    .btn-start {
-      background-color: #27ae60;
-      color: #ffffff;
-      margin-right: 30px;
-    }
-
-    .btn-start:hover {
-      background-color: #229954;
-    }
-
-    .btn-learn-more {
-      background-color: #e74c3c;
-      color: #ffffff;
-    }
-    .btn-learn-more:hover {
-      background-color: #c0392b;
-    }
-   
-    .el-divider--horizontal{
-        margin: 7px 34px;
-        width: 1000px;
-    }
-
-    .active{
-        color: #409EFF !important;
-    }
-
-    .comments-container {
-      max-width: 1000px;
-      background-color: #fff;
+      margin: 0 5px 5px 5px;
+      background-color: #f5f5f5bd;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      /* border-radius: 8px; */
+      border-radius: 8px;
       overflow: hidden;
-    }
-
-    .mycomment {
-      display: flex;
-      align-items: flex-start;
-      padding: 15px;
-      border-bottom: 1px solid #e0e0e0;
-      transition: background-color 0.3s;
-    }
-
-    /* .mycomment:hover {
-      background-color: #f9f9f9;
-    } */
-
-    .mycomment:last-child {
-      border-bottom: none;
-    }
-
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-right: 15px;
-      overflow: hidden;
-    }
-
-    .user-avatar img {
-      width: 100%;
+      width: 25%;
       height: 100%;
-      object-fit: cover;
-    }
-
-    .comment-content {
+  }
+  
+  .game-list, .player-activities {
       flex: 1;
-    }
-
-    .mycomment .user {
-      font-weight: bold;
-      color: #2c3e50;
-    }
-
-    .mycomment .timestamp {
-      color: #7f8c8d;
-      font-size: 0.8em;
-    }
-
-    .mycomment .message {
-      margin-top: 10px;
+      padding: 20px;
+      height: 100%;
+      overflow: auto;
+  }
+  
+  .player-activities::-webkit-scrollbar {
+         width: 0;
+   }
+  
+  h2 {
       color: #333;
-    }
-
-    .comment-form {
-      display: flex;
-      flex-direction: column;
-      padding: 15px;
-      /* background-color: #ecf0f1; */
-      /* border-top: 1px solid #bdc3c7; */
-    }
-
-    .comment-form textarea {
+  }
+  
+  ul {
+      list-style: none;
+      padding: 0;
+  }
+  
+  li h3 {
+      color: #007bff;
+  }
+  
+  .player-activities {
+      background-color: #f5f5f5bd;
+      overflow-x:hidden;
+      border-radius: 8px;
+  }
+  
+  #post-form {
+      margin-bottom: 20px;
+  }
+  
+  #post-input {
       width: 100%;
       padding: 10px;
       margin-bottom: 10px;
-      border: 1px solid #bdc3c7;
+      border: 1px solid #ccc;
       border-radius: 4px;
-      resize: none;
-      transition: border-color 0.3s;
-    }
-
-    .comment-form textarea:focus {
-      border-color: #3498db;
-    }
-
-    .comment-form button {
-      align-self: flex-end;
-      padding: 8px 15px;
-      background-color: #384338f5;
+  }
+  
+  button {
       color: #fff;
       border: none;
-      border-radius: 4px;
+      padding: 10px 15px;
       cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .comment-form button:hover {
+      border-radius: 4px;
+  }
+  
+  
+  .activity-item {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #f5f5f5bd;
+      border-radius: 4px;
+      transition: transform 0.3s ease-in-out;
+  }
+  
+  .activity-item:hover {
+      transform: scale(1.02);
+  }
+  
+  .activity-item p {
+      margin: 0 0 10px 0;
+  }
+  
+  /* 添加其他样式和动画效果 */
+  /* 游戏列表项的样式 */
+  li {
+      position: relative;
+  }
+  
+  img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+  }
+  
+  h3 {
+      color: #333;
+  }
+  
+  .details-link {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+  }
+  
+  .details-link:hover {
+      text-decoration: underline;
+  }
+  
+  .post-box {
+      max-width: 700px;
+      margin: 0 auto;
+      border: 2px solid #f5f5f5;
+      border-radius: 10px;
+      padding: 14px;
+      box-sizing: border-box;
+      background-color: #f5f5f5;
+      transition: border-color 0.3s ease;
+  }
+  
+  .post-box:focus-within {
+      border-color: #384338f6;
+  }
+  
+  #post-content {
+      width: 100%;
+      height: 70px;
+      border: none;
+      resize: none;
+      background-color: #f5f5f500;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 16px;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      outline: none; /* 取消 textarea 的默认聚焦样式 */
+  }
+  
+  .post-options {
+      margin-bottom: 38px;
+  }
+  
+  .post-btn {
+      padding: 10px 15px;
+      margin-left: 9px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      background-color: #384338f6;
+      color: white;
+      transition: background-color 0.3s ease;
+  }
+  
+  .post-btn:hover {
       background-color: #384338e0;
-    }
-
-
-  </style>
+  }
+  
+  /* 动态卡片样式 */
+  .card {
+      width: 100%;
+      max-width: 1000px;
+      margin: 20px auto;
+      border: 1px solid #eaeaea;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+  }
+  
+  .card:hover{
+      box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .header {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      background-color: #384338;
+      color: white;
+  }
+  
+  .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+  }
+  
+  .author-info {
+      flex-grow: 1;
+  }
+  
+  .author-name {
+      font-weight: bold;
+      margin-right: 5px;
+  }
+  
+  .post-time {
+      color: #ccc;
+      font-size: 13px;
+  }
+  
+  
+  .content {
+      padding: 15px;
+  }
+  
+  
+  .like-btn,
+  .dislike-btn,
+  .comment-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color:#555;
+      font-size: 14px;
+      margin-right: 5px;
+  }
+  
+  .like-count,
+  .dislike-count,
+  .comment-count {
+      margin-right: 10px;
+      font-size: 14px;
+      color: #555;
+  }
+  
+  .myfooter button:hover{
+      background-color: #007bff3a;
+  }
+  .emoji-item{
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      box-sizing: border-box;
+      padding: 5px;
+      text-align: center;
+  }
+  
+  .emoji-item:hover{
+      background-color: #384338f6;
+  }
+  
+  .game-item{
+      cursor: pointer;
+  }
+  
+  .game-item:hover{
+      color: red;
+  }
+  
+  .game-item img:hover{
+     
+      border:#ff0000 2px solid;   
+  }
+  
+  .notoverflow{
+      margin:14px;
+      font-size: 15.5px;
+      float: right;
+      color: #929292;
+  }
+  
+  .hasoverflow{
+      margin:14px;
+      font-size: 15.5px;
+      float: right;
+      color: #ff0000;
+  }
+  
+  .delete-btn{
+      margin-right: 20px;
+  }
+  
+  .delete-btn:hover{
+      color: #ff0000;
+  }
+  
+  .gamecard {
+        background-color: #ffffff;
+        display: flex;
+        overflow: hidden;
+      }
+  
+      .gamecard-header {
+        display: flex;
+        flex-direction: column;
+        margin: 0 15px 20px 15px;
+        width: 30%;
+        align-items:center;
+      }
+      .gamecard-body {
+        padding:0 10px 20px 10px;
+      }
+  
+  
+      .game-info {
+        margin-bottom: 20px;
+        font-size: 16px;
+      }
+  
+      .game-info h3 {
+        margin-top: 0;
+      }
+  
+      .player-rating {
+        margin-bottom: 20px;
+      }
+  
+      .btn-container {
+        text-align: center;
+      }
+  
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-right: 10px;
+      }
+  
+      .btn-start {
+        background-color: #27ae60;
+        color: #ffffff;
+        margin-right: 30px;
+      }
+  
+      .btn-start:hover {
+        background-color: #229954;
+      }
+  
+      .btn-learn-more {
+        background-color: #e74c3c;
+        color: #ffffff;
+      }
+      .btn-learn-more:hover {
+        background-color: #c0392b;
+      }
+     
+      .el-divider--horizontal{
+          margin: 7px 45px;
+          width: 1000px;
+      }
+      
+      .el-divider{
+          background-color: #60626652;
+      }
+  
+      .active{
+          color: #409EFF !important;
+      }
+  
+      .comments-container {
+        max-width: 1000px;
+        background-color: #f5f5f5bd;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* border-radius: 8px; */
+        overflow: hidden;
+      }
+  
+      .mycomment {
+        display: flex;
+        align-items: flex-start;
+        padding: 15px;
+        border-bottom: 1px solid #acabab;
+        transition: background-color 0.3s;
+      }
+  
+      /* .mycomment:hover {
+        background-color: #f9f9f9;
+      } */
+  
+      .mycomment:last-child {
+        border-bottom: none;
+      }
+  
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 15px;
+        overflow: hidden;
+      }
+  
+      .user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+  
+      .comment-content {
+        flex: 1;
+      }
+  
+      .mycomment .user {
+        font-weight: bold;
+        color: #2c3e50;
+      }
+  
+      .mycomment .timestamp {
+        color: #7f8c8d;
+        font-size: 0.8em;
+      }
+  
+      .mycomment .message {
+        margin-top: 10px;
+        color: #333;
+      }
+  
+      .comment-form {
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        /* background-color: #ecf0f1; */
+        /* border-top: 1px solid #bdc3c7; */
+      }
+  
+      .comment-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #bdc3c7;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+        resize: none;
+        transition: border-color 0.3s;
+      }
+  
+      .comment-form textarea:focus {
+        border-color: #3498db;
+      }
+  
+      .comment-form button {
+        align-self: flex-end;
+        padding: 8px 15px;
+        background-color: #384338f5;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+  
+      .comment-form button:hover {
+        background-color: #384338e0;
+      }
+  
+  
+    </style>
   

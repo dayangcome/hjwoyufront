@@ -344,9 +344,13 @@
         </div>
           <div style="height: 285px;"></div>
           <h1 style="font-size: 70px;color: white;text-align: center;margin: 100px 0;position: relative;bottom: 160px;">感谢您的访问!</h1>
+          
         <div class="section footer">
             <p>
                 &copy; 2024 By <a href="https://github.com/dayangcome">大洋</a>
+                &nbsp;
+                V 1.1
+                <router-link to="/updatelog">更新日志</router-link>
             </p>
         </div>
     	</section>

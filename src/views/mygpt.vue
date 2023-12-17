@@ -1,8 +1,8 @@
 <template>
-    <div id="outbox">
+    <div id="outbox-b">
         <div style="text-align: center;">
         <img src="../assets/images/homework.png" style="width: 0px;">
-        <h2 style="margin: 0;font-size: 20px;color:#515151">——  基于通义千问QUEN-MAX  ——</h2>
+        <h2 style="margin: 0;font-size: 20px;color:rgba(255, 255, 255, 0.9);">——  基于通义千问QUEN-MAX  ——</h2>
         </div>
     <div id="chat-container">
         <div id="chat-messages">
@@ -12,6 +12,7 @@
             <button id="send-button" @click="sendMessage" >发送</button>
         </div>
     </div>
+    <div style="margin: 30px auto;width: 100%;text-align: center;font-size: 18px;color: rgba(255, 255, 255, 0.9);font-weight:800;">如有需要，可以联系管理员更换版图</div>
     </div>
   
   </template>
@@ -116,9 +117,11 @@
   </script>
   
   <style>
-  #outbox{
-    height: 645px;
-    background-color: #f5f5f5;
+  #outbox-b{
+    height: calc(100vh - 64px);
+    background-color: rgba(108, 183, 253, 0.862);
+    background-image: url("https://pic.imgdb.cn/item/657d65cdc458853aef997a1b.jpg");
+    background-size: 1535px calc(100vh - 64px);
   }
     #chat-container {
         background-color: white;
@@ -127,6 +130,7 @@
             border: 1px solid #ccc;
             border-radius: 8px;
             overflow: hidden;
+            opacity: 0.9;
         }
 
         #chat-messages {
@@ -190,8 +194,8 @@
         }
   
     .el-popconfirm__action{
-        text-align: center;
-        margin-top:10px;
+        text-align: center !important;
+        margin-top:10px !important;
     }
     .bot-ava{
         width: 35px;

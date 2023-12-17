@@ -40,7 +40,7 @@
                       <h3>怀瑾握瑜成员</h3>
                     </div>
                     <div class="shenfen">
-                      <img src="../assets/images/friends.png" @click="c2" alt="">
+                      <img src="https://pic.imgdb.cn/item/657e6598c458853aefc3b8b0.png" @click="c2" alt="">
                       <h3>其他的朋友</h3>
                     </div>
                     <div class="shenfen">
@@ -220,7 +220,7 @@ import eventBus from './event-bus';
           this.status=4
         },
         c3(){
-          this.nowava="https://z1.ax1x.com/2023/11/21/piagjkF.png"
+          this.nowava="https://pic.imgdb.cn/item/6573bcb3c458853aefcdf446.png"
           this.nowname="匿名的用户"
           localStorage.setItem("nickname",this.nowname)
           localStorage.setItem("avatar",this.nowava)
@@ -290,7 +290,7 @@ import eventBus from './event-bus';
     background-color: white;
   }
   .container{
-    background-color: black;
+    background-color: #3735358a;
   }
   .el-link.el-link--primary{
     color: #fff;

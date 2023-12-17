@@ -6,7 +6,8 @@
             </div>
             
             <div class="content">
-                <p>该模块正在全力建设中，敬请期待我们的精彩呈现！</p>
+                <p>该模块在构思换成什么好，如果您有想法，欢迎联系2012190160@qq.com，谢谢！</p>
+                <p>如果您想用云盘功能，请点击上方 <span style="color: red;">其他工具-坚果云云盘</span>，祝您生活愉快！</p>
                 <!-- 可以添加更多相关信息、图片、动画等 -->
             </div>
         </div>
@@ -28,6 +29,7 @@
         #outbox {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #ecf0f1;
+            height: calc(100vh - 64px);
             margin: 0;
             padding: 0;
             display: flex;
@@ -44,7 +46,7 @@
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            margin-top: 11%;
+            margin-top: 9%;
         }
 
         .header {
