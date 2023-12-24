@@ -71,7 +71,6 @@
 
                     <div class="choose1" v-show="status===2" style="display: flex;width: 100%;">
                          <div style="margin: 15px;display: flex;flex-direction: column;justify-content: center;padding-bottom:25px;">
-                         <img  style="margin:10px" src="../assets/images/avatar.jpg" alt="">
                          <h3 style="margin-top: 10px;width: 100px;">怀瑾握瑜成员</h3>
                          </div>
                          <div style="margin:15px;display: flex;flex-direction: column;justify-content:space-around;padding-left: 40px;width: 100%;">
@@ -104,7 +103,36 @@
                             <img class="cavatar" :class="{ active: choosethis == index }" :src="item" @click="thisava(index)" alt="" v-for="(item,index) in deavatar">
                          </div>
                          <p style="color: red;" v-show="avaError">请选择一个头像再进行下一步</p>
-                         <div><el-button type="warning" style="margin-right: 35px;" @click="r0" round>上一步</el-button><el-button type="primary" style="margin-top: 10px;" @click="c6" round>下一步</el-button></div>
+                         <div>
+                
+                          <el-button type="success" style="margin-right: 35px;" @click="qq0" round>使用网络图片</el-button>
+                          <el-button type="warning" style="margin-right: 35px;" @click="r0" round>上一步</el-button>
+                          <el-button type="primary" style="margin-top: 10px;" @click="c6" round>下一步</el-button>
+                          
+                        </div>
+                    </div>
+
+                    <div class="choose1" v-show="status===8" style="display: flex;width: 100%;">
+                         <div style="margin: 15px;display: flex;flex-direction: column;justify-content: center;padding-bottom:25px;">
+                         <img  style="margin:10px" src="https://pic.imgdb.cn/item/657e6598c458853aefc3b8b0.png" alt="">
+                         <h3 style="margin-top: 10px;margin-left: 10px; width: 100px;">其他的朋友</h3>
+                         </div>
+                         <div style="margin:15px;display: flex;flex-direction: column;justify-content:space-around;width: 100%;">
+                         <h2>输入网络图片链接，我们会自动获取图片</h2>
+                         <el-input
+                           type="textarea"
+                           placeholder="请输入网络图片链接"
+                           v-model="QQhao2"
+                           maxlength="120"
+                           resize="none"
+                           show-word-limit
+                           style="margin: 10px 0;"
+                         >
+                         </el-input>
+                         <p style="color: red;" v-show="tuError">该图片链接无法打开</p>
+                         <h4 style="color: #9e9e9e;margin: 10px 0;">你可以点击其他工具-聚合图床，把本地图片上传到云床作获取图片链接</h4>
+                         <div><el-button type="warning" style="margin-right: 35px;" @click="c2" round>上一步</el-button><el-button type="primary" @click="c8" round>下一步</el-button></div>
+                         </div>
                     </div>
 
                     <div class="choose1" v-show="status===5" style="display: flex;flex-direction: column;align-items: center;">
@@ -157,9 +185,11 @@ import eventBus from './event-bus';
           isshow:'show',
           hao:'',
           QQhao:'',
+          QQhao2:'',
           status:0,
           nickname:'',
           haoError:false,
+          tuError:false,
           qqError:false,
           avaError:false,
           nicknameError:false,
@@ -190,9 +220,14 @@ import eventBus from './event-bus';
         r0(){
           this.status=0
         },
+        qq0(){
+          this.status=8
+          this.tuError=flase
+        },
         c4(){
           if(this.hao=='6318'){
             this.status=2
+            this.haoError=false
           }else{
             this.haoError=true
           }
@@ -215,6 +250,30 @@ import eventBus from './event-bus';
         .catch((err) => {
           console.error(err);
         }); 
+        },
+        // 定义方法，传入参数为图片链接
+        checkImgExists(imgUrl){
+            return new Promise(function(resolve, reject){
+                var ImgObj = new Image();
+                ImgObj.src = imgUrl;
+                ImgObj.onload = function(res){
+                    resolve(res);
+                };
+                ImgObj.onerror = function(err){
+                    reject(err);
+                };
+            })
+        },
+        c8(){
+          this.checkImgExists(this.QQhao2).then(()=>{
+            this.nowava=this.QQhao2
+            localStorage.setItem("avatar",this.nowava)
+            this.status=5
+          }).catch(()=>{
+              console.log("无效链接");
+              this.tuError=true
+          })
+          
         },
         c2(){
           this.status=4
@@ -240,7 +299,6 @@ import eventBus from './event-bus';
             localStorage.setItem("avatar",this.nowava)
             this.status=5
           }
-
         },
         c7(){
           if(this.nickname==''){
@@ -254,14 +312,14 @@ import eventBus from './event-bus';
           }
         },
         handleCommand(command) {
-                        if(command=='a'){
-                            localStorage.removeItem("nickname")
-                            localStorage.removeItem("avatar")
-                            localStorage.removeItem("uid")
-                            eventBus.$emit('refresh') //事件总线
-                            this.$router.go(0)
-                            this.status=0
-                        }
+          if(command=='a'){
+              localStorage.removeItem("nickname")
+              localStorage.removeItem("avatar")
+              localStorage.removeItem("uid")
+              eventBus.$emit('refresh') //事件总线
+              this.$router.go(0)
+              this.status=0
+          }
         },
         generateUniqueRandomNumber() {            //生成随机uid
           const timestamp = new Date().getTime(); // 获取当前时间戳
@@ -339,17 +397,20 @@ import eventBus from './event-bus';
       drop-shadow(0 0 5px rgba(37, 204, 247));
   }
   .shenfen img{
-    max-width: 80px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     margin: 10px;
   }
 
   .choose1 img{
-    max-width: 80px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
   }
   .cavatar{
-    max-width: 55px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     margin: 8px;
     cursor: pointer;

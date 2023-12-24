@@ -85,6 +85,13 @@
             <!-- 可以在此处添加工具的功能或链接 -->
             </div>
 
+            <div class="tool-card" @click="tool12">
+            <img src="https://img1.baidu.com/it/u=3781107780,4135489129&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=572" alt="Tool 12">
+            <h3>视频字幕库</h3>
+            <p>可以获取一些B站主播的直播信息</p>
+            <!-- 可以在此处添加工具的功能或链接 -->
+            </div>
+
             
         </div>
         <!-- 添加更多工具卡片 -->
@@ -169,7 +176,11 @@
         },
         tool11(){
           window.open("https://www.unscreen.com/")
-        }
+        },
+        tool12(){
+          window.open("https://zimu.bili.studio/")
+        },
+        
 
       }
     }

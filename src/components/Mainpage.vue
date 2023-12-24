@@ -349,7 +349,7 @@
             <p>
                 &copy; 2024 By <a href="https://github.com/dayangcome">大洋</a>
                 &nbsp;
-                V 1.1
+                V 1.2
                 <router-link to="/updatelog">更新日志</router-link>
             </p>
         </div>

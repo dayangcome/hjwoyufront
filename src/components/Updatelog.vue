@@ -38,6 +38,17 @@
                             </ul>
                         </article>
                     </div>
+                    <div class="card period3">
+                        <article>
+                            <h1><span class="updatetime">2023.12.23</span> <span class="version">V1.2版本</span></h1>
+                            <ul>
+                                <li>在身份认证时，其他朋友可以选择上传网络图片作为自己的头像进行认证。</li>
+                                <li>优化了社区交流-闲聊区中，白边不对齐的问题。</li>
+                                <li>更新了其他工具-提瓦特启动器，使其更加高仿。</li>
+                                <li>更新了其他工具中的一些工具。</li>
+                            </ul>
+                        </article>
+                    </div>
                     <div class="card period2">
                         <article>
                             <h1>其他</h1>
