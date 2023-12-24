@@ -71,6 +71,7 @@
 
                     <div class="choose1" v-show="status===2" style="display: flex;width: 100%;">
                          <div style="margin: 15px;display: flex;flex-direction: column;justify-content: center;padding-bottom:25px;">
+                          <img style="margin:10px" src="../assets/images/avatar.jpg" alt="">
                          <h3 style="margin-top: 10px;width: 100px;">怀瑾握瑜成员</h3>
                          </div>
                          <div style="margin:15px;display: flex;flex-direction: column;justify-content:space-around;padding-left: 40px;width: 100%;">
